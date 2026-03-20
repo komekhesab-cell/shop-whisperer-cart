@@ -8,7 +8,7 @@ import CartDrawer from "@/components/store/CartDrawer";
 import { products, type Product } from "@/data/products";
 
 // Replace with your WhatsApp number (with country code, no + sign)
-const WHATSAPP_NUMBER = "1234567890";
+const WHATSAPP_NUMBER = "994509690680";
 
 function StorePage() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
