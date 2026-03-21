@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useProducts } from "@/hooks/useProducts";
+import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
-import { Plus, Pencil, Trash2, X, Upload, ArrowLeft, ImageIcon } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Plus, Pencil, Trash2, X, Upload, ArrowLeft, ImageIcon, LogOut } from "lucide-react";
+import { Link, Navigate } from "react-router-dom";
 import type { Product } from "@/data/products";
 import { toast } from "sonner";
 
@@ -26,6 +27,7 @@ const emptyForm: ProductForm = {
 };
 
 export default function Admin() {
+  const { user, loading: authLoading, signOut } = useAuth();
   const { data: products = [], isLoading } = useProducts();
   const queryClient = useQueryClient();
   const [editing, setEditing] = useState<Product | null>(null);
@@ -33,6 +35,18 @@ export default function Admin() {
   const [form, setForm] = useState<ProductForm>(emptyForm);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  if (authLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-foreground border-t-transparent" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
 
   const isOpen = creating || !!editing;
 
@@ -152,13 +166,22 @@ export default function Admin() {
               Manage Products
             </h1>
           </div>
-          <button
-            onClick={openCreate}
-            className="flex items-center gap-2 rounded-full bg-foreground px-4 py-2 font-sans text-sm font-medium text-background transition-transform active:scale-[0.97]"
-          >
-            <Plus className="h-4 w-4" />
-            Add Product
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={openCreate}
+              className="flex items-center gap-2 rounded-full bg-foreground px-4 py-2 font-sans text-sm font-medium text-background transition-transform active:scale-[0.97]"
+            >
+              <Plus className="h-4 w-4" />
+              Add Product
+            </button>
+            <button
+              onClick={signOut}
+              className="flex h-9 w-9 items-center justify-center rounded-full border text-muted-foreground transition-colors hover:bg-muted active:scale-[0.95]"
+              aria-label="Sign out"
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
+          </div>
         </div>
       </header>
 
