@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useProducts } from "@/hooks/useProducts";
+import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
-import { Plus, Pencil, Trash2, X, Upload, ArrowLeft, ImageIcon } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Plus, Pencil, Trash2, X, Upload, ArrowLeft, ImageIcon, LogOut } from "lucide-react";
+import { Link, Navigate } from "react-router-dom";
 import type { Product } from "@/data/products";
 import { toast } from "sonner";
 
