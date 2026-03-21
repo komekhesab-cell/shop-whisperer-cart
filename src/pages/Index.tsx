@@ -33,14 +33,18 @@ function StorePage() {
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {products.map((product, i) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onViewDetails={setSelectedProduct}
-              index={i}
-            />
-          ))}
+          {isLoading
+            ? [1, 2, 3].map((i) => (
+                <div key={i} className="aspect-[4/5] animate-pulse rounded-lg bg-muted" />
+              ))
+            : products.map((product, i) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onViewDetails={setSelectedProduct}
+                  index={i}
+                />
+              ))}
         </div>
       </section>
 
