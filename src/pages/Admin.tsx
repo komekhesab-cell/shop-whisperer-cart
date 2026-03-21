@@ -166,13 +166,22 @@ export default function Admin() {
               Manage Products
             </h1>
           </div>
-          <button
-            onClick={openCreate}
-            className="flex items-center gap-2 rounded-full bg-foreground px-4 py-2 font-sans text-sm font-medium text-background transition-transform active:scale-[0.97]"
-          >
-            <Plus className="h-4 w-4" />
-            Add Product
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={openCreate}
+              className="flex items-center gap-2 rounded-full bg-foreground px-4 py-2 font-sans text-sm font-medium text-background transition-transform active:scale-[0.97]"
+            >
+              <Plus className="h-4 w-4" />
+              Add Product
+            </button>
+            <button
+              onClick={signOut}
+              className="flex h-9 w-9 items-center justify-center rounded-full border text-muted-foreground transition-colors hover:bg-muted active:scale-[0.95]"
+              aria-label="Sign out"
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
+          </div>
         </div>
       </header>
 
