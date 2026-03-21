@@ -14,6 +14,7 @@ const WHATSAPP_NUMBER = "994509690680";
 function StorePage() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cartOpen, setCartOpen] = useState(false);
+  const { data: products = [], isLoading } = useProducts();
 
   return (
     <div className="min-h-screen bg-background">
