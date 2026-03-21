@@ -27,6 +27,7 @@ const emptyForm: ProductForm = {
 };
 
 export default function Admin() {
+  const { user, loading: authLoading, signOut } = useAuth();
   const { data: products = [], isLoading } = useProducts();
   const queryClient = useQueryClient();
   const [editing, setEditing] = useState<Product | null>(null);
@@ -34,6 +35,18 @@ export default function Admin() {
   const [form, setForm] = useState<ProductForm>(emptyForm);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  if (authLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-foreground border-t-transparent" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
 
   const isOpen = creating || !!editing;
 
