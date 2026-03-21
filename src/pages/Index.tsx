@@ -5,7 +5,8 @@ import Hero from "@/components/store/Hero";
 import ProductCard from "@/components/store/ProductCard";
 import ProductDetail from "@/components/store/ProductDetail";
 import CartDrawer from "@/components/store/CartDrawer";
-import { products, type Product } from "@/data/products";
+import type { Product } from "@/data/products";
+import { useProducts } from "@/hooks/useProducts";
 
 // Replace with your WhatsApp number (with country code, no + sign)
 const WHATSAPP_NUMBER = "994509690680";
