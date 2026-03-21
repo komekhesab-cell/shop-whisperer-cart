@@ -5,7 +5,8 @@ import Hero from "@/components/store/Hero";
 import ProductCard from "@/components/store/ProductCard";
 import ProductDetail from "@/components/store/ProductDetail";
 import CartDrawer from "@/components/store/CartDrawer";
-import { products, type Product } from "@/data/products";
+import type { Product } from "@/data/products";
+import { useProducts } from "@/hooks/useProducts";
 
 // Replace with your WhatsApp number (with country code, no + sign)
 const WHATSAPP_NUMBER = "994509690680";
@@ -13,6 +14,7 @@ const WHATSAPP_NUMBER = "994509690680";
 function StorePage() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cartOpen, setCartOpen] = useState(false);
+  const { data: products = [], isLoading } = useProducts();
 
   return (
     <div className="min-h-screen bg-background">
@@ -31,14 +33,18 @@ function StorePage() {
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {products.map((product, i) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onViewDetails={setSelectedProduct}
-              index={i}
-            />
-          ))}
+          {isLoading
+            ? [1, 2, 3].map((i) => (
+                <div key={i} className="aspect-[4/5] animate-pulse rounded-lg bg-muted" />
+              ))
+            : products.map((product, i) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onViewDetails={setSelectedProduct}
+                  index={i}
+                />
+              ))}
         </div>
       </section>
 
