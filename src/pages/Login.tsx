@@ -3,26 +3,30 @@ import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
+const ADMIN_EMAIL = "developer.ramin@gmail.com";
+
 export default function Login() {
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) {
-      toast.error("Please fill in all fields");
+    if (!password) {
+      toast.error("Please enter the password");
       return;
     }
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabase.auth.signInWithPassword({
+      email: ADMIN_EMAIL,
+      password,
+    });
     if (error) {
-      toast.error(error.message);
+      toast.error("Wrong password");
       setLoading(false);
       return;
     }
-    toast.success("Logged in!");
+    toast.success("Welcome, Admin!");
     navigate("/admin");
   };
 
@@ -33,20 +37,8 @@ export default function Login() {
         className="w-full max-w-sm space-y-5 rounded-xl border bg-card p-8 shadow-sm"
       >
         <h1 className="font-display text-xl font-medium text-foreground text-center">
-          Admin Login
+          Admin Access
         </h1>
-        <div>
-          <label className="mb-1 block font-sans text-xs font-medium text-muted-foreground">
-            Email
-          </label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-lg border bg-background px-3 py-2 font-sans text-sm text-foreground outline-none focus:ring-2 focus:ring-ring"
-            placeholder="admin@example.com"
-          />
-        </div>
         <div>
           <label className="mb-1 block font-sans text-xs font-medium text-muted-foreground">
             Password
