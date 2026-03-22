@@ -48,6 +48,14 @@ export default function Admin() {
     return <Navigate to="/login" replace />;
   }
 
+  if (user.email !== "developer.ramin@gmail.com") {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <p className="font-sans text-sm text-muted-foreground">Access denied</p>
+      </div>
+    );
+  }
+
   const isOpen = creating || !!editing;
 
   const openCreate = () => {
