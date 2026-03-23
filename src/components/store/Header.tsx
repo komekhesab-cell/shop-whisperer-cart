@@ -12,7 +12,7 @@ export default function Header({ onCartOpen }: HeaderProps) {
     <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-sm">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-8">
         <a href="/" className="font-display text-xl font-semibold tracking-tight text-foreground">
-          BrenSport
+          BrendSport
         </a>
 
         <nav className="hidden gap-8 font-sans text-sm tracking-wide text-muted-foreground sm:flex">
