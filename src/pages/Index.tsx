@@ -33,10 +33,10 @@ export default function Index() {
       <section id="collection" className="container mx-auto px-4 py-16 sm:px-8 sm:py-24">
         <div className="mb-10 text-center">
           <h2 className="font-display text-3xl font-medium tracking-tight text-foreground sm:text-4xl text-balance animate-reveal-up">
-            The Collection
+            Məhsullarımız
           </h2>
           <p className="mx-auto mt-3 max-w-md font-sans text-sm leading-relaxed text-muted-foreground animate-reveal-up" style={{ animationDelay: "0.1s" }}>
-            Each piece is crafted with care from natural materials, designed to last beyond seasons.
+            Hər bir məhsul ucuz və yüksək keyfiyyətlidir.
           </p>
         </div>
 
@@ -93,13 +93,8 @@ export default function Index() {
       <section id="about" className="border-t bg-card">
         <div className="container mx-auto px-4 py-16 sm:px-8 sm:py-24">
           <div className="mx-auto max-w-2xl text-center animate-reveal-up">
-            <h2 className="font-display text-3xl font-medium tracking-tight text-foreground text-balance">
-              Made with intention
-            </h2>
             <p className="mt-4 font-sans text-base leading-relaxed text-muted-foreground">
-              We believe in slow fashion — fewer pieces, better quality, honest prices.
-              Every garment is made from natural, responsibly sourced materials in small batches.
-              No sales, no markdowns, no waste.
+              Hər bir geyim kiçik partiyalarda təbii, məsuliyyətlə alınmış materiallardan hazırlanır.
             </p>
           </div>
         </div>
@@ -107,8 +102,8 @@ export default function Index() {
 
       <footer className="border-t py-8">
         <div className="container mx-auto flex flex-col items-center gap-2 px-4 sm:flex-row sm:justify-between sm:px-8">
-          <span className="font-display text-sm text-foreground">Maison</span>
-          <p className="font-sans text-xs text-muted-foreground">© 2026 Maison. All rights reserved.</p>
+          <span className="font-display text-sm text-foreground">BrendSport</span>
+          <p className="font-sans text-xs text-muted-foreground">© 2024 BrendSport. All rights reserved.</p>
         </div>
       </footer>
 
