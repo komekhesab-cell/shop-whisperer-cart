@@ -17,7 +17,7 @@ export default function ProductCard({ product, onViewDetails, index }: ProductCa
       style={{ animationDelay: `${0.1 + index * 0.08}s` }}
     >
       <div
-        className="relative aspect-[4/5] cursor-pointer overflow-hidden rounded-lg bg-secondary"
+        className="relative aspect-[3/4] cursor-pointer overflow-hidden rounded-lg bg-secondary"
         onClick={() => onViewDetails(product)}
       >
         <img
