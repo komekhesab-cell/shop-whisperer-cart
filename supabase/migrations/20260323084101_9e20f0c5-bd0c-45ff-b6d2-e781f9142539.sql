@@ -1,0 +1,1 @@
+ALTER TABLE public.products ADD COLUMN sizes jsonb NOT NULL DEFAULT '[]'::jsonb;
