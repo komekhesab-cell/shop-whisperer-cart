@@ -14,7 +14,8 @@ export default function CartDrawer({ isOpen, onClose, whatsappNumber }: CartDraw
     if (items.length === 0) return;
 
     const lines = items.map(
-      (i) => `• ${i.product.name} × ${i.quantity} — $${(i.product.price * i.quantity).toFixed(2)}`
+      (i) =>
+        `• ${i.product.name}${i.size ? ` (${i.size})` : ""} × ${i.quantity} — $${(i.product.price * i.quantity).toFixed(2)}`
     );
     const message = [
       "Hi! I'd like to order:",
@@ -34,12 +35,9 @@ export default function CartDrawer({ isOpen, onClose, whatsappNumber }: CartDraw
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
-      {/* Backdrop */}
       <div className="absolute inset-0 bg-foreground/40 animate-fade-in" onClick={onClose} />
 
-      {/* Drawer */}
       <div className="relative z-10 flex h-full w-full max-w-md flex-col bg-card shadow-2xl animate-slide-in-right">
-        {/* Header */}
         <div className="flex items-center justify-between border-b px-6 py-4">
           <h2 className="font-display text-lg font-medium text-foreground">Your Basket</h2>
           <button
@@ -51,7 +49,6 @@ export default function CartDrawer({ isOpen, onClose, whatsappNumber }: CartDraw
           </button>
         </div>
 
-        {/* Items */}
         <div className="flex-1 overflow-y-auto px-6 py-4">
           {items.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-center">
@@ -67,7 +64,7 @@ export default function CartDrawer({ isOpen, onClose, whatsappNumber }: CartDraw
           ) : (
             <ul className="space-y-4">
               {items.map((item) => (
-                <li key={item.product.id} className="flex gap-4">
+                <li key={`${item.product.id}__${item.size || ""}`} className="flex gap-4">
                   <img
                     src={item.product.image}
                     alt={item.product.name}
@@ -78,13 +75,18 @@ export default function CartDrawer({ isOpen, onClose, whatsappNumber }: CartDraw
                       <h4 className="font-sans text-sm font-medium text-foreground">
                         {item.product.name}
                       </h4>
+                      {item.size && (
+                        <p className="font-sans text-xs text-muted-foreground">
+                          Size: {item.size}
+                        </p>
+                      )}
                       <p className="font-sans text-sm tabular-nums text-muted-foreground">
                         ${item.product.price}
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                        onClick={() => updateQuantity(item.product.id, item.quantity - 1, item.size)}
                         className="flex h-7 w-7 items-center justify-center rounded-full border text-foreground transition-colors hover:bg-muted active:scale-[0.95]"
                         aria-label="Decrease quantity"
                       >
@@ -94,14 +96,14 @@ export default function CartDrawer({ isOpen, onClose, whatsappNumber }: CartDraw
                         {item.quantity}
                       </span>
                       <button
-                        onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                        onClick={() => updateQuantity(item.product.id, item.quantity + 1, item.size)}
                         className="flex h-7 w-7 items-center justify-center rounded-full border text-foreground transition-colors hover:bg-muted active:scale-[0.95]"
                         aria-label="Increase quantity"
                       >
                         <Plus className="h-3 w-3" />
                       </button>
                       <button
-                        onClick={() => removeFromCart(item.product.id)}
+                        onClick={() => removeFromCart(item.product.id, item.size)}
                         className="ml-auto font-sans text-xs text-muted-foreground underline underline-offset-2 transition-colors hover:text-destructive"
                       >
                         Remove
@@ -114,7 +116,6 @@ export default function CartDrawer({ isOpen, onClose, whatsappNumber }: CartDraw
           )}
         </div>
 
-        {/* Footer */}
         {items.length > 0 && (
           <div className="border-t px-6 py-4 space-y-3">
             <div className="flex items-center justify-between">

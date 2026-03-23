@@ -7,6 +7,7 @@ import { Plus, Pencil, Trash2, X, Upload, ArrowLeft, ImageIcon, LogOut } from "l
 import { Link, Navigate } from "react-router-dom";
 import type { Product } from "@/data/products";
 import { toast } from "sonner";
+import { CATEGORIES, SIZES_BY_CATEGORY, type SizeStock } from "@/data/categories";
 
 interface ProductForm {
   name: string;
@@ -15,6 +16,7 @@ interface ProductForm {
   details: string;
   category: string;
   image: string;
+  sizes: SizeStock[];
 }
 
 const emptyForm: ProductForm = {
@@ -24,6 +26,7 @@ const emptyForm: ProductForm = {
   details: "",
   category: "",
   image: "",
+  sizes: [],
 };
 
 export default function Admin() {
@@ -44,10 +47,7 @@ export default function Admin() {
     );
   }
 
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
-
+  if (!user) return <Navigate to="/login" replace />;
   if (user.email !== "developer.ramin@gmail.com") {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
@@ -65,6 +65,8 @@ export default function Admin() {
   };
 
   const openEdit = (p: Product) => {
+    const rawSizes = (p as any).sizes;
+    const sizes: SizeStock[] = Array.isArray(rawSizes) ? rawSizes : [];
     setForm({
       name: p.name,
       price: String(p.price),
@@ -72,6 +74,7 @@ export default function Admin() {
       details: p.details.join("\n"),
       category: p.category,
       image: p.image,
+      sizes,
     });
     setEditing(p);
     setCreating(false);
@@ -81,6 +84,25 @@ export default function Admin() {
     setCreating(false);
     setEditing(null);
     setForm(emptyForm);
+  };
+
+  const handleCategoryChange = (cat: string) => {
+    const availableSizes = SIZES_BY_CATEGORY[cat] || [];
+    // Preserve existing stock settings if sizes overlap
+    const newSizes: SizeStock[] = availableSizes.map((size) => {
+      const existing = form.sizes.find((s) => s.size === size);
+      return existing || { size, in_stock: true };
+    });
+    setForm((f) => ({ ...f, category: cat, sizes: newSizes }));
+  };
+
+  const toggleSizeStock = (size: string) => {
+    setForm((f) => ({
+      ...f,
+      sizes: f.sizes.map((s) =>
+        s.size === size ? { ...s, in_stock: !s.in_stock } : s
+      ),
+    }));
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -108,6 +130,10 @@ export default function Admin() {
       toast.error("Name and price are required");
       return;
     }
+    if (!form.category) {
+      toast.error("Please select a category");
+      return;
+    }
     setSaving(true);
     const payload = {
       name: form.name,
@@ -116,12 +142,13 @@ export default function Admin() {
       details: form.details.split("\n").filter(Boolean),
       category: form.category,
       image: form.image,
+      sizes: form.sizes,
     };
 
     if (editing) {
       const { error } = await supabase
         .from("products")
-        .update(payload)
+        .update(payload as any)
         .eq("id", editing.id);
       if (error) {
         toast.error("Failed to update: " + error.message);
@@ -130,7 +157,7 @@ export default function Admin() {
       }
       toast.success("Product updated");
     } else {
-      const { error } = await supabase.from("products").insert(payload);
+      const { error } = await supabase.from("products").insert(payload as any);
       if (error) {
         toast.error("Failed to create: " + error.message);
         setSaving(false);
@@ -220,11 +247,7 @@ export default function Admin() {
                 className="group relative overflow-hidden rounded-xl border bg-card shadow-sm transition-shadow hover:shadow-md"
               >
                 {p.image ? (
-                  <img
-                    src={p.image}
-                    alt={p.name}
-                    className="h-48 w-full object-cover"
-                  />
+                  <img src={p.image} alt={p.name} className="h-48 w-full object-cover" />
                 ) : (
                   <div className="flex h-48 items-center justify-center bg-muted">
                     <ImageIcon className="h-10 w-10 text-muted-foreground/30" />
@@ -267,7 +290,7 @@ export default function Admin() {
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="absolute inset-0 bg-foreground/40 animate-fade-in" onClick={close} />
-          <div className="relative z-10 mx-4 w-full max-w-lg rounded-xl bg-card p-6 shadow-2xl animate-reveal-up sm:p-8">
+          <div className="relative z-10 mx-4 w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-xl bg-card p-6 shadow-2xl animate-reveal-up sm:p-8">
             <div className="mb-6 flex items-center justify-between">
               <h2 className="font-display text-lg font-medium text-foreground">
                 {editing ? "Edit Product" : "New Product"}
@@ -281,6 +304,7 @@ export default function Admin() {
             </div>
 
             <div className="space-y-4">
+              {/* Name */}
               <div>
                 <label className="mb-1 block font-sans text-xs font-medium text-muted-foreground">
                   Name *
@@ -293,6 +317,7 @@ export default function Admin() {
                 />
               </div>
 
+              {/* Price + Category */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="mb-1 block font-sans text-xs font-medium text-muted-foreground">
@@ -309,17 +334,52 @@ export default function Admin() {
                 </div>
                 <div>
                   <label className="mb-1 block font-sans text-xs font-medium text-muted-foreground">
-                    Category
+                    Category *
                   </label>
-                  <input
+                  <select
                     value={form.category}
-                    onChange={(e) => setField("category", e.target.value)}
+                    onChange={(e) => handleCategoryChange(e.target.value)}
                     className="w-full rounded-lg border bg-background px-3 py-2 font-sans text-sm text-foreground outline-none transition-colors focus:ring-2 focus:ring-ring"
-                    placeholder="e.g. Tops"
-                  />
+                  >
+                    <option value="">Select…</option>
+                    {CATEGORIES.map((c) => (
+                      <option key={c.value} value={c.value}>
+                        {c.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
+              {/* Sizes */}
+              {form.sizes.length > 0 && (
+                <div>
+                  <label className="mb-2 block font-sans text-xs font-medium text-muted-foreground">
+                    Sizes — click to toggle stock
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {form.sizes.map((s) => (
+                      <button
+                        key={s.size}
+                        type="button"
+                        onClick={() => toggleSizeStock(s.size)}
+                        className={`flex h-10 min-w-[2.75rem] items-center justify-center rounded-lg border px-3 font-sans text-sm transition-all ${
+                          s.in_stock
+                            ? "border-foreground bg-foreground text-background"
+                            : "border-border bg-muted text-muted-foreground/40 line-through"
+                        }`}
+                      >
+                        {s.size}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="mt-1 font-sans text-xs text-muted-foreground">
+                    Dark = in stock · Faded = out of stock
+                  </p>
+                </div>
+              )}
+
+              {/* Description */}
               <div>
                 <label className="mb-1 block font-sans text-xs font-medium text-muted-foreground">
                   Description
@@ -333,6 +393,7 @@ export default function Admin() {
                 />
               </div>
 
+              {/* Details */}
               <div>
                 <label className="mb-1 block font-sans text-xs font-medium text-muted-foreground">
                   Details (one per line)
@@ -346,17 +407,14 @@ export default function Admin() {
                 />
               </div>
 
+              {/* Image */}
               <div>
                 <label className="mb-1 block font-sans text-xs font-medium text-muted-foreground">
                   Image
                 </label>
                 <div className="flex items-center gap-3">
                   {form.image ? (
-                    <img
-                      src={form.image}
-                      alt="Preview"
-                      className="h-16 w-16 rounded-lg object-cover"
-                    />
+                    <img src={form.image} alt="Preview" className="h-16 w-16 rounded-lg object-cover" />
                   ) : (
                     <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-muted">
                       <ImageIcon className="h-6 w-6 text-muted-foreground/30" />
