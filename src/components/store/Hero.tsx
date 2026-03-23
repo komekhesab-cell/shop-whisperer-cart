@@ -10,26 +10,26 @@ export default function Hero() {
             className="mb-4 font-sans text-sm font-medium uppercase tracking-[0.2em] text-muted-foreground animate-reveal-up"
             style={{ animationDelay: "0.1s" }}
           >
-            Spring / Summer 2026
+            Yaz / Yay 2026
           </p>
           <h1
             className="font-display text-4xl font-medium leading-[1.1] tracking-tight text-foreground sm:text-5xl lg:text-6xl text-balance animate-reveal-up"
             style={{ animationDelay: "0.25s" }}
           >
-            Thoughtful clothing for everyday life
+            Gündəlik həyat üçün ideal geyim
           </h1>
           <p
             className="mt-6 max-w-md font-sans text-base leading-relaxed text-muted-foreground animate-reveal-up"
             style={{ animationDelay: "0.4s" }}
           >
-            Natural fabrics, timeless silhouettes, honest pricing. Pieces designed to be worn, loved, and kept.
+            Təbii parçalar, zamansız siluetlər, dürüst qiymətlər. Geyinmək, sevmək və saxlamaq üçün nəzərdə tutulmuş parçalar.
           </p>
           <div className="mt-8 animate-reveal-up" style={{ animationDelay: "0.55s" }}>
             <a
               href="#collection"
               className="inline-flex items-center rounded-full bg-foreground px-7 py-3 text-sm font-medium text-background transition-transform hover:shadow-lg active:scale-[0.97]"
             >
-              View Collection
+              Kolleksiyaya bax
             </a>
           </div>
         </div>
