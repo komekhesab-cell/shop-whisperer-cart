@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { CartProvider } from "@/context/CartContext";
 import Header from "@/components/store/Header";
 import Hero from "@/components/store/Hero";
 import ProductCard from "@/components/store/ProductCard";
@@ -11,7 +10,7 @@ import { useProducts } from "@/hooks/useProducts";
 // Replace with your WhatsApp number (with country code, no + sign)
 const WHATSAPP_NUMBER = "994509690680";
 
-function StorePage() {
+export default function Index() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cartOpen, setCartOpen] = useState(false);
   const { data: products = [], isLoading } = useProducts();
@@ -80,13 +79,5 @@ function StorePage() {
       <ProductDetail product={selectedProduct} onClose={() => setSelectedProduct(null)} />
       <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} whatsappNumber={WHATSAPP_NUMBER} />
     </div>
-  );
-}
-
-export default function Index() {
-  return (
-    <CartProvider>
-      <StorePage />
-    </CartProvider>
   );
 }
