@@ -103,7 +103,10 @@ export default function Index() {
       <footer className="border-t py-8">
         <div className="container mx-auto flex flex-col items-center gap-2 px-4 sm:flex-row sm:justify-between sm:px-8">
           <span className="font-display text-sm text-foreground">BrendSport</span>
-          <p className="font-sans text-xs text-muted-foreground">© 2024 BrendSport. All rights reserved.</p>
+          <div className="flex items-center gap-4">
+            <a href="/connect" className="font-sans text-xs text-muted-foreground hover:text-foreground">Connect AI assistant</a>
+            <p className="font-sans text-xs text-muted-foreground">© 2024 BrendSport. All rights reserved.</p>
+          </div>
         </div>
       </footer>
 
